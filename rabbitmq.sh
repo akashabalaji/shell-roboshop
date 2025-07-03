@@ -1,27 +1,31 @@
 #!/bin/bash
+
 START_TIME=$(date +%s)
 USERID=$(id -u)
 R="\e[31m"
 G="\e[32m"
 Y="\e[33m"
 N="\e[0m"
-
-LOGS_FOLDER="/var/logs/roboshop-logs"
+LOGS_FOLDER="/var/log/roboshop-logs"
 SCRIPT_NAME=$(echo $0 | cut -d "." -f1)
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log"
 SCRIPT_DIR=$PWD
 
 mkdir -p $LOGS_FOLDER
-echo "script started executing at: $(date)" | tee -a $LOG_FILE
+echo "Script started executing at: $(date)" | tee -a $LOG_FILE
 
-#check the user has root previleges or not
+# check the user has root priveleges or not
 if [ $USERID -ne 0 ]
 then
-    echo -e "$R ERROR:: Please run this script with root access $N" | tee -a $LOG_FILE # Exit if not root
-    exit 1 # Exit with error code 1
-    else
+    echo -e "$R ERROR:: Please run this script with root access $N" | tee -a $LOG_FILE
+    exit 1 #give other than 0 upto 127
+else
     echo "You are running with root access" | tee -a $LOG_FILE
 fi
+
+echo "Please enter rabbitmq password to setup"
+read -s RABBITMQ_PASSWD
+
 # validate functions takes input as exit status, what command they tried to install
 VALIDATE(){
     if [ $1 -eq 0 ]
@@ -33,17 +37,17 @@ VALIDATE(){
     fi
 }
 
-cp rabbitmq.rep /etc/yum.repos.d/rabbitmq.repo
-VALIDATE $? "Copying RabbitMQ repo file"
+cp rabbitmq.repo /etc/yum.repos.d/rabbitmq.repo
+VALIDATE $? "Adding rabbitmq repo"
 
 dnf install rabbitmq-server -y &>>$LOG_FILE
-VALIDATE $? "Installing RabbitMQ Server"
+VALIDATE $? "Installing rabbitmq server"
 
 systemctl enable rabbitmq-server &>>$LOG_FILE
-VALIDATE $? "Enabling RabbitMQ Service"
+VALIDATE $? "Enabling rabbitmq server"
 
-systemctl start rabitmq-server &>>$LOG_FILE
-VALIDATE $? "Starting RabbitMQ Service"
+systemctl start rabbitmq-server &>>$LOG_FILE
+VALIDATE $? "Starting rabbitmq server"
 
 rabbitmqctl add_user roboshop $RABBITMQ_PASSWD &>>$LOG_FILE
 rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*" &>>$LOG_FILE
