@@ -65,5 +65,5 @@ systemctl enable user &>>$LOG_FILE
 systemctl start user
 
 END_TIME=$(date +%s)
-TOTAL_TIME=$(( $END-TIME - $START_TIME ))
-echo -e "Script executed successfully,  $Y tim taken: $TOTAL_TIME seconds $N" | tee -a $LOG_FILE
+TOTAL_TIME=$(( END_TIME - START_TIME ))
+echo -e "Script executed successfully, ${Y}time taken: ${TOTAL_TIME} seconds${N}" | tee -a "$LOG_FILE"
