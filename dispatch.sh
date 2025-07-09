@@ -66,3 +66,8 @@ go build &>>$LOG_FILE
 VALIDATE $? "Building go application"
 
 cp $SCRIPT_DIR/dispatch.service /etc/systemd/system/dispatch.service
+
+
+END_TIME=$(date +%s)
+TOTAL_TIME=$(( END_TIME - START_TIME ))
+echo -e "Script executed successfully, ${Y}time taken: ${TOTAL_TIME} seconds${N}" | tee -a "$LOG_FILE"
