@@ -2,9 +2,9 @@
 # This script creates EC2 instances for a Roboshop application and updates Route 53 DNS records.
 
 AMI_ID="ami-09c813fb71547fc4f"
-SG_ID="sg-0afb0733333250162" # replace with your SG ID
+SG_ID="sg-06afdd0919175d247" # replace with your SG ID
 INSTANCES=("mongodb" "redis" "mysql" "rabbitmq" "catalogue" "user" "cart" "shipping" "payment" "dispatch" "frontend")
-ZONE_ID="Z08186589VBOFNQARTE2" # replace with your ZONE ID
+ZONE_ID="Z00173281MRJFFPM52LSY" # replace with your ZONE ID
 DOMAIN_NAME="akashabalaji.site" # replace with your domain
 
 #for instance in ${INSTANCES[@]}
